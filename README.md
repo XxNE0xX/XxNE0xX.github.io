@@ -1,259 +1,174 @@
-# Jalpc. [![Analytics](https://ga-beacon.appspot.com/UA-73784599-1/welcome-page)](https://github.com/jarrekk/Jalpc)
-
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
-[![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
-[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badge/)
-
-<https://jarrekk.github.io/Jalpc/>
-
-<http://www.jarrekk.com>  -- Personal website
-
-![Blog](https://github.com/jarrekk/Jalpc/raw/master/readme_files/Jalpc.png)
-
-- [3 steps to setup this theme at your website!](#3-steps-to-setup-this-theme-at-your-website)
-- [Features](#features)
-  - [Index page](#index-page)
-    - [`_data/*.yml`](#_datayml)
-  - [Chart Skills](#chart-skills)
-  - [Categories in blog page](#categories-in-blog-page)
-  - [Pagination](#pagination)
-  - [Page views counter](#page-views-counter)
-  - [Multilingual Page](#multilingual-page)
-  - [Web analytics](#web-analytics)
-  - [Comment](#comment)
-  - [Share](#share)
-  - [Search engines](#search-engines)
-  - [Compress CSS and JS files](#compress-css-and-js-files)
-- [Put in a Jalpc Plug](#put-in-a-jalpc-plug)
-- [Upgrading Jalpc](#upgrading-jalpc)
-  - [Ensure there's an upstream remote](#ensure-theres-an-upstream-remote)
-  - [Pull in the latest changes](#pull-in-the-latest-changes)
-- [Todo](#todo)
-- [Donate Jalpc](#donate-jalpc)
-- [Wiki](#wiki)
-- [Ad](#ad)
-
-This is a simple, beautiful and swift theme for Jekyll. It's mobile first, fluidly responsive, and delightfully lightweight.
-
-If you're completely new to Jekyll, I recommend checking out the documentation at <http://jekyllrb.com> or there's a tutorial by Smashing Magazine.
-
-# 3 steps to setup this theme at your website!
-
-Here is a [document](https://jarrekk.github.io/Jalpc/html/2017/01/31/3-steps-to-setup-website-with-Jalpc.html) of how to setup this theme with 3 steps and a [wiki](https://github.com/jarrekk/Jalpc/wiki/How-to-add-posts) of how to add posts. If you have any **questions** please ask me at [GitHub Issues](https://github.com/jarrekk/Jalpc/issues).
-
-# Features
-
-## Index page
-
-The index page is seprated into several sections and they are located in `_includes/sections`,the configuration is in `_data/landing.yml` and section's detail configuration is in `_data/*.yml`.
-
-### `_data/*.yml`
-
-These files are used to dynamically render pages, so you almost don't have to edit *html files* to change your own theme, besides you can use `jekyll serve --watch` to reload changes.
-
-The following is mapping between *yml files* to *sections*.
-
-* landing.yml ==> index.html
-* index/language.yml ==> index.html
-* index/careers.yml  ==>  _includes/sections/career.html
-* index/skills.yml  ==>  _includes/sections/skills.html
-* index/projects.yml  ==>  _includes/sections/projects.html
-* index/links.yml  ==>  _includes/sections/links.html
-
-This *yml file* is about blog page navbar
-
-* blog.yml ==> _includes/header.html
-
-The following is mapping between *yml files* to *donation*
-
-* donation/donationlist.yml ==> blog/donate.html
-* donation/alipay.yml  ==>  blog/donate.html
-* donation/wechat_pay.yml ==> blog/donate.yml
-
-## Chart Skills
-
-I use [Chart.js](http://www.chartjs.org/) to show skills, the type of skills' chart is radar, if you want to custom, please read document of Chart.js and edit **_includes/sections/skills.html** and **_data/index/skills.yml**.
-
-## Categories in blog page
-
-In blog page, we categorize posts into several categories by url, all category pages use same template html file - `_includes/category.html`.
-
-For example: URL is `http://127.0.0.1:4000/python/`. In `_data/blog.yml`, we define this category named `Python`, so in `_includes/category.html` we get this URL(/python/) and change it to my category(Python), then this page are posts about **Python**. The following code is about how to get url and display corresponding posts in  `_includes/category.html`.
-
-```html
-<div class="row">
-    <div class="col-lg-12 text-center">
-        <div class="navy-line"></div>
-        {% assign category = page.url | remove:'/' | capitalize %}
-        {% if category == 'Html' %}
-        {% assign category = category | upcase %}
-        {% endif %}
-        <h1>{{ category }}</h1>
-    </div>
-</div>
-<div class="wrapper wrapper-content  animated fadeInRight blog">
-    <div class="row">
-        <ul id="pag-itemContainer" style="list-style:none;">
-            {% assign counter = 0 %}
-            {% for post in site.categories[category] %}
-            {% assign counter = counter | plus: 1 %}
-            <li>
-```
-
-## Pagination
-
-The pagination in jekyll is not very perfect,so I use front-end web method,there is a [blog](http://www.jarrekk.com/html/2016/06/04/jekyll-pagination-with-jpages.html) about the method and you can refer to [jPages](http://luis-almeida.github.io/jPages).
-
-## Page views counter
-
-Many third party page counter platforms are too slow,so I count my website page view myself,the javascript file is [static/js/count.min.js](https://github.com/jarrekk/jalpc_jekyll_theme/blob/gh-pages/static/js/count.min.js) ([static/js/count.js](https://github.com/jarrekk/jalpc_jekyll_theme/blob/gh-pages/static/js/count.js)),the backend API is written with flask on [Vultr VPS](https://www.vultr.com/), detail code please see [ztool-backhend-mongo](https://github.com/Z-Tool/ztool-backhend-mongo).
-
-## Multilingual Page
-
-The landing page has multilingual support with the [i18next](http://i18next.com) plugin.
-
-Languages are configured in the `_data/index/language.yml` file.
-
-> Not everyone needs this feature, so I make it very easy to remove it, just clear content in file `_data/language.yml` and folder `static/locales/`.
-
-About how to custom multilingual page, please see [wiki](https://github.com/jarrekk/Jalpc/wiki/Multilingual-Page).
-
-## Web analytics
-
-I use [Google analytics](https://www.google.com/analytics/) and [GrowingIO](https://www.growingio.com/) to do web analytics, you can choose either to realize it,just register a account and replace id in `_config.yml`.
-
-## Comment
-
-I use [Disqus](https://disqus.com/) to realize comment. You should set disqus_shortname and get public key and then, in `_config.yml`, edit the disqus value to enable Disqus.
-
-## Share
-
-I use [AddToAny](https://www.addtoany.com/) to share my blog on other social network platform. You can go to this website to custom your share buttons and paste code at `_includes/share.html`.
-
-![share](https://github.com/jarrekk/Jalpc/raw/master/readme_files/share.png)
-
-## Search engines
-
-I use javascript to realize blog search,you can double click `Ctrl` or click the icon at lower right corner of the page,the detail you can got to this [repository](https://github.com/androiddevelop/jekyll-search). Just use it.
-
-![search](https://github.com/jarrekk/Jalpc/raw/master/readme_files/search.gif)
-
-## Compress CSS and JS files
-
-All CSS and JS files are compressed at `/static/assets`.
-
-I use [UglifyJS2](https://github.com/mishoo/UglifyJS2), [clean-css](https://github.com/jakubpawlowicz/clean-css) to compress CSS and JS files, customised CSS files are at `_sass` folder which is feature of [Jekyll](https://jekyllrb.com/docs/assets/). If you want to custom CSS and JS files, you need to do the following:
-
-1. Install [NPM](https://github.com/npm/npm) then install **UglifyJS2** and **clean-css**: `npm install -g uglifyjs; npm install -g clean-css`, then run `npm install` at root dir of project.
-2. Compress script is **build.js**
-3. If you want to add or remove CSS/JS files, just edit **build/build.js** and **build/files.conf.js**, then run `npm run build` at root dir of project, link/src files will use new files.
-
-OR
-
-Edit CSS files at `_sass` folder.
-
-# Local tests/development
-
-First, install Jekyll on terminal:
-
-```shell
-bundle install
-```
-
-Then, execute:
-
-```shell
-bundle exec jekyll serve
-```
-
-# Put in a Jalpc Plug
-
-If you want to give credit to the Jalpc theme with a link to my personal website <http://www.jarrekk.com>, that'd be awesome. No worries if you don't.
-
-# Upgrading Jalpc
-
-Jalpc is always being improved by its users, so sometimes one may need to upgrade.
-
-## Ensure there's an upstream remote
-
-If `git remote -v` doesn't have an upstream listed, you can do the following to add it:
-
-```
-git remote add upstream https://github.com/jarrekk/Jalpc.git
-```
-
-## Pull in the latest changes
-
-```
-git pull upstream gh-pages
-```
-
-There may be merge conflicts, so be sure to fix the files that git lists if they occur. That's it!
-
-# Testing Locally
-To test your site locally, you’ll need
-
-- [ruby](https://www.ruby-lang.org/en/)
-- the [github-pages](https://github.com/github/pages-gem) gem
-
-## Installing ruby
-There are [lots of different ways to install ruby](https://www.ruby-lang.org/en/documentation/installation/).
-
-In Mac OS X, older versions of ruby will already be installed. But I use the [Ruby Version Manager (RVM)](https://rvm.io/) to have a more recent version. You could also use [Homebrew](https://brew.sh/).
-
-In Windows, use [RubyInstaller](https://rubyinstaller.org/). (In most of this tutorial, I’ve assumed you’re using a Mac or some flavor of Unix. It’s possible that none of this was usable for Windows folks. Sorry!)
-
-## Installing the github-pages gem
-Run the following command:
-
-```
-gem install github-pages
-```
-
-This will install the github-pages gem and all dependencies (including [jekyll](https://jekyllrb.com/)).
-
-## Later, to update the gem, type:
-
-```
-gem update github-pages
-```
-
-Testing your site locally
-To construct and test your site locally, go into the directory and type
-
-```
-jekyll build
-```
-
-This will create (or modify) a `_site/ directory`, containing everything from `assets/`, and then the `index.md` and all `pages/*.md` files, converted to html. (So there’ll be `_site/index.html` and the various `_site/pages/*.html.`)
-
-Type the following in order to “serve” the site. This will first run build, and so it does not need to be preceded by `jekyll build`.
-
-```
-jekyll serve
-```
-
-Now open your browser and go to `http://localhost:4000/site-name/`
-
-# Todo
-- [ ] `jekyll server --watch` mode need to use original CSS/JS files
-- [ ] User can customise index page's section title.
-- [x] Non-github projects also have links.
-- [ ] Add some custom color themes for selection(Nav bar, background, words, dominant hue).
-
-# Donate Jalpc
-If this project let you enjoy your blog time, you can give me a cup of coffee :)
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/jarrekk)
-
-# Wiki
-
-* [Multilingual Page](https://github.com/jarrekk/Jalpc/wiki/Multilingual-Page)
-* [How to add posts](https://github.com/jarrekk/Jalpc/wiki/How-to-add-posts)
-* [Change Log](https://github.com/jarrekk/Jalpc/wiki/Change-Log)
-* [Contributors](https://github.com/jarrekk/Jalpc/wiki/Contributors)
-* [Thanks to the following](https://github.com/jarrekk/Jalpc/wiki/Thanks-to-the-following)
-
-# Ad
-[Jalpc-A](https://github.com/Jack614/Jalpc-A): another Jekyll theme written by [AngularJS](https://angularjs.org/).
-
+<a name="readme-top"></a>
+
+  <!-- PROJECT SHIELDS -->
+
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
+
+  <!-- PROJECT LOGO -->
+
+  <br />
+  <div align="center">
+    <a href="https://github.com/mdyeates/my-portfolio">
+      <img src="src/images/logo.svg" alt="Logo" width="200" height="200">
+    </a>
+    <h1 align="center">michaelyeates.co.uk</h1>
+    <p align="center">
+    <br/>
+Crafting Connections through Code: Explore my journey, projects, and passions in this immersive portfolio powered by React.<br/>
+      <br/>
+      Built by: Michael Yeates
+      <br/>
+      <br/>
+      <a href="https://github.com/mdyeates/my-portfolio"><strong>Explore the docs »</strong></a>
+      <br/>
+      <br/>
+      <a href="https://michaelyeates.co.uk">View Live Website</a>
+      ·
+      <a href="https://github.com/mdyeates/my-portfolio/issues">Report Bug</a>
+      ·
+      <a href="https://github.com/mdyeates/my-portfolio/issues">Request Feature</a>
+    </p>
+  </div>
+  
+  <!-- TABLE OF CONTENTS -->
+
+  <details>
+    <summary>Table of Contents</summary>
+    <ol>
+      <li>
+        <a href="#about-the-project">About The Project</a>
+        <ul>
+          <li><a href="#photos">Photos</a></li>
+          <li><a href="#built-with">Built With</a></li>
+          <li><a href="#description">Description</a></li>
+        </ul>
+      </li>
+      <li>
+          <a href="#getting-started">Getting Started</a>
+        <ul>
+          <li><a href="#prerequisites">Prerequisites</a></li>
+          <li><a href="#installation">Installation</a></li>
+        </ul>
+      </li>
+      <li><a href="#license">License</a></li>
+      <li><a href="#questions">Questions</a></li>
+    </ol>
+  </details>
+  
+  <!-- ABOUT THE PROJECT -->
+  
+  ## About The Project
+  
+  ### Photos
+  
+[![My React Portfolio Screen Shot][product-screenshot]](https://michaelyeates.co.uk)
+
+[![My React Portfolio Screen Shot][product-screenshot2]](https://michaelyeates.co.uk)
+
+[![My React Portfolio Screen Shot][product-screenshot3]](https://michaelyeates.co.uk)
+
+[![My React Portfolio Screen Shot][product-screenshot4]](https://michaelyeates.co.uk)
+
+  <p align="right"><a href="#readme-top">back to top</a></p>
+  
+  ### Built With
+  
+  ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=React&logoColor=61DAFB)
+
+  <p align="right"><a href="#readme-top">back to top</a></p>
+  
+  ### Description
+  
+This is more than a portfolio; it's an invitation to explore, learn, and connect. So, immerse yourself and enjoy the journey.
+
+While I wholeheartedly encourage you to utilise my portfolio as a springboard for your own creative ventures, I would like to kindly ask that, in the spirit of fairness and recognition, you provide attribution to <strong>michaelyeates.co.uk</strong>. Your support in acknowledging the origin of this portfolio is greatly appreciated.
+
+I kindly urge you to abstain from portraying either the portfolio or the projects as products of your own authorship. The energy and time devoted to shaping this portfolio reflect my personal journey and aspirations.
+
+Thank you for your understanding, and for embracing the ethos of creativity, authenticity, and shared respect that underpins our digital community. Your appreciation means a lot!
+
+If you like what you see, I'd be truly grateful if you consider giving it a star 🌟
+
+<h3>TL;DR</h3>
+Feel free to fork this repo for your own purposes, provided you give me credit.
+
+  <p align="right"><a href="#readme-top">back to top</a></p>
+
+<!-- GETTING STARTED -->
+
+## Getting Started
+
+To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+
+- npm
+  ```sh
+  npm install npm@latest -g
+  ```
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/mdyeates/my-portfolio.git
+   ```
+2. Install NPM packages
+   ```sh
+   npm install
+   ```
+
+  <p align="right"><a href="#readme-top">back to top</a></p>
+  
+ 
+  <!-- LICENSE -->
+
+## License
+
+Distributed under the MIT License. See `LICENSE.md` for more information.
+
+  <p align="right"><a href="#readme-top">back to top</a></p>
+  
+  
+<!-- QUESTIONS -->
+  
+## Questions
+
+If you have any inquiries, don't hesitate to reach out to me via socials or by sending an email to <a href="mailto:michael-yeates@outlook.com">michael-yeates@outlook.com</a>
+
+<a href="https://www.linkedin.com/in/mdyeates/">LinkedIn</a> | <a href="https://github.com/mdyeates/">GitHub</a>
+
+Project Link: [https://github.com/mdyeates/my-portfolio](https://github.com/mdyeates/my-portfolio)
+
+  <p align="right"><a href="#readme-top">back to top</a></p>
+  
+  <!-- MARKDOWN LINKS & IMAGES -->
+
+[contributors-shield]: https://img.shields.io/github/contributors/mdyeates/my-portfolio.svg?style=for-the-badge
+[contributors-url]: https://github.com/mdyeates/my-portfolio/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/mdyeates/my-portfolio.svg?style=for-the-badge
+[forks-url]: https://github.com/mdyeates/my-portfolio/network/members
+[stars-shield]: https://img.shields.io/github/stars/mdyeates/my-portfolio.svg?style=for-the-badge
+[stars-url]: https://github.com/mdyeates/my-portfolio/stargazers
+[issues-shield]: https://img.shields.io/github/issues/mdyeates/my-portfolio.svg?style=for-the-badge
+[issues-url]: https://github.com/mdyeates/my-portfolio/issues
+[license-shield]: https://img.shields.io/github/license/mdyeates/my-portfolio.svg?style=for-the-badge
+[license-url]: https://github.com/mdyeates/my-portfolio/blob/main/LICENSE.md
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/mdyeates
+
+  <!-- UPDATE PLACEHOLDER IMAGES HERE -->
+
+[product-screenshot]: src/images/screenshot.png
+[product-screenshot2]: src/images/screenshot2.png
+[product-screenshot3]: src/images/screenshot3.png
+[product-screenshot4]: src/images/screenshot4.png
+[responsive-screenshot]: src/images/mobile-screenshot.png
+[responsive-screenshot2]: src/images/mobile-screenshot2.png
+[responsive-screenshot3]: src/images/mobile-screenshot3.png
+[responsive-screenshot4]: src/images/mobile-screenshot4.png
